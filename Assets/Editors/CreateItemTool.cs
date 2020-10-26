@@ -1,15 +1,15 @@
-﻿using Paypal.Model.Order;
+﻿using Paypal.Model;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
-using static Paypal.Model.Order.PaymentModel;
+using static Paypal.Model.Order;
 
 public class CreateItemTool : EditorWindow
 {
-    public PaymentModel Order;
+    public PayPalPaymentCreation Order;
     string path;
 
     string Cost, Currency, Name, Description;
@@ -27,7 +27,7 @@ public class CreateItemTool : EditorWindow
     }
     void OnEnable()
     {
-        Order = new PaymentModel();
+        Order = new PayPalPaymentCreation();
 
         path = Application.dataPath + "/Resources/Orders/";
     }
@@ -65,6 +65,14 @@ public class CreateItemTool : EditorWindow
             Order.transactions[0].amount.total = Cost;
             Order.transactions[0].amount.currency = Currency;
             Order.transactions[0].description = Description;
+            Order.transactions[0].amount.details = new Details();
+            Order.transactions[0].amount.details.subtotal = Cost;
+            Order.transactions[0].amount.details.tax = "0.00";
+            Order.transactions[0].amount.details.shipping = "0.00";
+            Order.transactions[0].amount.details.handling_fee = "0.00";
+            Order.transactions[0].amount.details.insurance = "0.00";
+            Order.transactions[0].amount.details.shipping_discount = "0.00";
+            Order.transactions[0].description = Description;
             Order.transactions[0].invoice_number = System.Guid.NewGuid().ToString();
             Order.transactions[0].item_list = new ItemList();
             Order.transactions[0].item_list.items = new List<Item>();
@@ -96,3 +104,7 @@ public class CreateItemTool : EditorWindow
     }
 
 }
+
+#region old
+
+#endregion
