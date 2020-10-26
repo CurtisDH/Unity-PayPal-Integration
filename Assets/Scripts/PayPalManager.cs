@@ -22,7 +22,7 @@ public class PayPalManager : MonoBehaviour
     #endregion
 
     #region URLS
-    string _authTokenURL = "https://api.sandbox.paypal.com/v1/oauth2/token", _paymentURL = "https://api.sandbox.paypal.com/v1/payments/payment";
+    string _authTokenURL = "https://api.sandbox.paypal.com/v1/oauth2/token", _paymentURL = "https://api.sandbox.paypal.com/v1/payments/payment",_executeURL;
     #endregion
 
 
@@ -89,10 +89,43 @@ public class PayPalManager : MonoBehaviour
             Payment = data;
             Debug.Log("request sent");
             Application.OpenURL(Payment.links[1].href);
-            
+            StartCoroutine(GetPayerID(Payment.links[0].href,accessToken));
         }
     }
+    IEnumerator GetPayerID(string url,string accessToken)
+    {
+        bool orderApproved = false;
+        while (orderApproved == false)
+        {
+            yield return new WaitForSeconds(5);
+            using (var request = UnityWebRequest.Get(url))
+            {
+                request.SetRequestHeader("Content-Type", "application/json");
+                request.SetRequestHeader("Authorization", "Bearer " + accessToken);
+                yield return request.SendWebRequest();
+                if (request.isNetworkError || !string.IsNullOrEmpty(request.error))
+                {
+                    Debug.Log(request.downloadHandler.text);
+                    Debug.LogError(request.error);
 
+                }
+                else
+                {
+                    var data = JsonUtility.FromJson<Paypal.Model.Verify>(request.downloadHandler.text);
+                    if (data.payer.status == "VERIFIED")
+                    {
+                        Debug.Log("ORDER APPROVED STATUS VERIFIED");
+                        orderApproved = true;
+                        Debug.Log(data.links[0].href);
+                        Debug.Log(data.links[1].href);
+                        Debug.Log(data.links[2].href);
+                        Debug.Log(data.payer.payer_info.payer_id);
+                        _executeURL = data.links[1].href;
+                    }
+                }
+            }
+        }
+    }
 
 
 }
