@@ -131,6 +131,179 @@ namespace Paypal.Model
             public string method;
         }
     }
+
+    [Serializable]
+    public class ExecuteResponse
+    {
+        public string id;
+        public string intent;
+        public string state;
+        public string cart;
+        public Payer payer;
+        public List<Transaction> transactions;
+        public List<object> failed_transactions;
+        public DateTime create_time;
+        public DateTime update_time;
+        public List<Link2> links;
+
+        [Serializable]
+        public class ShippingAddress
+        {
+            public string recipient_name;
+            public string line1;
+            public string city;
+            public string state;
+            public string postal_code;
+            public string country_code;
+        }
+        [Serializable]
+        public class PayerInfo
+        {
+            public string email;
+            public string first_name;
+            public string last_name;
+            public string payer_id;
+            public ShippingAddress shipping_address;
+            public string country_code;
+        }
+        [Serializable]
+        public class Payer
+        {
+            public string payment_method;
+            public string status;
+            public PayerInfo payer_info;
+        }
+        [Serializable]
+        public class Details
+        {
+            public string subtotal;
+            public string tax;
+            public string shipping;
+            public string insurance;
+            public string handling_fee;
+            public string shipping_discount;
+            public string discount;
+        }
+        [Serializable]
+        public class Amount
+        {
+            public string total;
+            public string currency;
+            public Details details;
+        }
+        [Serializable]
+        public class Payee
+        {
+            public string merchant_id;
+            public string email;
+        }
+        [Serializable]
+        public class Item
+        {
+            public string name;
+            public string sku;
+            public string description;
+            public string price;
+            public string currency;
+            public string tax;
+            public int quantity;
+        }
+        [Serializable]
+        public class ShippingAddress2
+        {
+            public string recipient_name;
+            public string line1;
+            public string city;
+            public string state;
+            public string postal_code;
+            public string country_code;
+        }
+        [Serializable]
+        public class ItemList
+        {
+            public List<Item> items;
+            public ShippingAddress2 shipping_address;
+        }
+        [Serializable]
+        public class Details2
+        {
+            public string subtotal;
+            public string tax;
+            public string shipping;
+            public string insurance;
+            public string handling_fee;
+            public string shipping_discount;
+            public string discount;
+        }
+        [Serializable]
+
+        public class Amount2
+        {
+            public string total;
+            public string currency;
+            public Details2 details;
+        }
+        [Serializable]
+        public class TransactionFee
+        {
+            public string value;
+            public string currency;
+        }
+        [Serializable]
+        public class ReceivableAmount
+        {
+            public string value;
+            public string currency;
+        }
+        [Serializable]
+        public class Link
+        {
+            public string href;
+            public string rel;
+            public string method;
+        }
+        [Serializable]
+        public class Sale
+        {
+            public string id;
+            public string state;
+            public Amount2 amount;
+            public string payment_mode;
+            public string protection_eligibility;
+            public string protection_eligibility_type;
+            public TransactionFee transaction_fee;
+            public ReceivableAmount receivable_amount;
+            public string exchange_rate;
+            public string parent_payment;
+            public DateTime create_time;
+            public DateTime update_time;
+            public List<Link> links;
+        }
+        [Serializable]
+        public class RelatedResource
+        {
+            public Sale sale;
+        }
+        [Serializable]
+        public class Transaction
+        {
+            public Amount amount;
+            public Payee payee;
+            public string description;
+            public string invoice_number;
+            public ItemList item_list;
+            public List<RelatedResource> related_resources;
+        }
+        [Serializable]
+        public class Link2
+        {
+            public string href;
+            public string rel;
+            public string method;
+        }
+    }
+
+
 }
 
 
