@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using static Paypal.Model.Order;
 
 namespace Paypal.Model
 {
@@ -94,6 +94,42 @@ namespace Paypal.Model
             public string nonce;
         }
 
+    }
+    [System.Serializable]
+    public class Verify
+    {
+        public string intent;
+        public string state;
+        public string cart;
+        public Payer payer;
+        public List<Transaction> transactions;
+        public RedirectUrls redirect_urls;
+        public List<Link> links;
+        [System.Serializable]
+        public class PayerInfo
+        {
+            public string payer_id;
+        }
+        [System.Serializable]
+        public class Payer
+        {
+            public string payment_method;
+            public string status;
+            public PayerInfo payer_info;
+        }
+        [System.Serializable]
+        public class RedirectUrls
+        {
+            public string return_url;
+            public string cancel_url;
+        }
+        [System.Serializable]
+        public class Link
+        {
+            public string href;
+            public string rel;
+            public string method;
+        }
     }
 }
 
