@@ -121,11 +121,36 @@ public class PayPalManager : MonoBehaviour
                         Debug.Log(data.links[2].href);
                         Debug.Log(data.payer.payer_info.payer_id);
                         _executeURL = data.links[1].href;
+                        StartCoroutine(ExecutePayment(data, accessToken));
                     }
                 }
             }
         }
     }
 
+    IEnumerator ExecutePayment(Paypal.Model.Verify payer_ID,string accessToken)
+    {
+        string payerID = JsonUtility.ToJson(payer_ID.payer.payer_info);
+        byte[] rawbody = Encoding.UTF8.GetBytes(payerID);
+        using (var request = new UnityWebRequest(_executeURL, "POST"))
+        {
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.uploadHandler = new UploadHandlerRaw(rawbody);
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Authorization", "Bearer " + accessToken);
+            yield return request.SendWebRequest();
+            if (request.isNetworkError || !string.IsNullOrEmpty(request.error))
+            {
+                Debug.LogError(request.downloadHandler.text);
+            }
+            else
+            {
+                Debug.Log("Request sent successfully");
+                Debug.Log(request.downloadHandler.text);
+                var data = JsonUtility.FromJson<Paypal.Model.ExecuteResponse>(request.downloadHandler.text);
+                Debug.Log("Order Completed:" + data.state);
+            }
 
+        }
+    }
 }
